@@ -3,129 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz</title>
+    <title>CULT TV</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
-            background-color: #0CC0DF; /* Background color */
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            width: 40%;
-            max-width: 800px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
-            padding: 20px;
-        }
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            cursor: pointer;
-            border: 5px solid #0CC0DF; /* Outer blue border color */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .qa-box {
-            margin-top: 20px;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
             text-align: center;
         }
-        .question {
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
         }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
         .answer {
-            font-size: 1.2em;
-            color: #555;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img id="quizImage" src="https://i.imgur.com/9yoUTqk.png" alt="Quiz Image">
-        <div class="qa-box">
-            <div id="question" class="question">Click the image to get a question!</div>
-            <div id="answer" class="answer"></div>
-        </div>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>CULT TV</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
     </div>
-    
-    <script>
-        const questionsAndAnswers = [
-            { question: "What cult TV show featured the character Special Agent Dale Cooper?", answer: "Twin Peaks" },
-            { question: "In which show did David Duchovny and Gillian Anderson play FBI agents?", answer: "The X-Files" },
-            { question: "What is the name of the spaceship in the cult TV series 'Firefly'?", answer: "Serenity" },
-            { question: "Which cult British TV show featured the mysterious Village?", answer: "The Prisoner" },
-            { question: "What is the name of the cult TV show about a high school cheerleader who fights vampires?", answer: "Buffy the Vampire Slayer" },
-            { question: "Which show featured a coffee-obsessed detective in a town filled with secrets?", answer: "Twin Peaks" },
-            { question: "Who played Doctor Who in the 2005 revival of the series?", answer: "Christopher Eccleston" },
-            { question: "What British TV show is known for the phrase 'Don't tell him, Pike!'?", answer: "Dad's Army" },
-            { question: "In which series do FBI agents investigate paranormal activity?", answer: "The X-Files" },
-            { question: "Which cult sci-fi show is set aboard the Battlestar Galactica?", answer: "Battlestar Galactica" },
-            { question: "What cult TV show had the tagline 'The truth is out there'?", answer: "The X-Files" },
-            { question: "Which show featured a group of people stranded on an island after a plane crash?", answer: "Lost" },
-            { question: "What is the setting for the cult TV series 'Farscape'?", answer: "In a distant part of the universe" },
-            { question: "Who played the title character in the TV show 'Dexter'?", answer: "Michael C. Hall" },
-            { question: "What cult TV show was a British sci-fi anthology that explores futuristic dystopias?", answer: "Black Mirror" },
-            { question: "What is the name of the alien Time Lord in 'Doctor Who'?", answer: "The Doctor" },
-            { question: "Which cult show follows a group of survivors of a post-apocalyptic world fighting zombies?", answer: "The Walking Dead" },
-            { question: "What is the fictional town where 'Twin Peaks' is set?", answer: "Twin Peaks, Washington" },
-            { question: "Which show had a character called Spike who was a vampire?", answer: "Buffy the Vampire Slayer" },
-            { question: "In which show do characters travel across the multiverse in a moving house?", answer: "Rick and Morty" },
-            { question: "What British TV show featured time travel, Daleks, and the TARDIS?", answer: "Doctor Who" },
-            { question: "Which show featured a high school chemistry teacher who became a meth kingpin?", answer: "Breaking Bad" },
-            { question: "In 'Stranger Things,' what is the name of the alternate dimension?", answer: "The Upside Down" },
-            { question: "Which TV show starred Bruce Campbell as Ash, fighting against the Evil Dead?", answer: "Ash vs Evil Dead" },
-            { question: "What is the name of the interdimensional being in 'Twin Peaks'?", answer: "BOB" },
-            { question: "In 'Lost,' what is the name of the mysterious group on the island?", answer: "The Others" },
-            { question: "Which show features a police officer named Rick Grimes?", answer: "The Walking Dead" },
-            { question: "What is the name of the spaceship captain in 'Firefly'?", answer: "Malcolm Reynolds" },
-            { question: "In which show does the character Fox Mulder believe in aliens?", answer: "The X-Files" },
-            { question: "Which cult series featured the time-traveling Doctor and his companions?", answer: "Doctor Who" },
-            { question: "Which cult TV series is set in the post-apocalyptic future, where a ragtag fleet searches for Earth?", answer: "Battlestar Galactica" },
-            { question: "Which series featured the characters Walter White and Jesse Pinkman?", answer: "Breaking Bad" },
-            { question: "In 'Buffy the Vampire Slayer,' what is the name of Buffy's best friend who is also a witch?", answer: "Willow Rosenberg" },
-            { question: "Which cult series had a diner owner named Norma Jennings?", answer: "Twin Peaks" },
-            { question: "In 'Stranger Things,' what is the name of the girl with telekinetic powers?", answer: "Eleven" },
-            { question: "What cult sci-fi series is set in the far future aboard a living ship called Moya?", answer: "Farscape" },
-            { question: "Which show follows a blind lawyer who becomes a vigilante at night?", answer: "Daredevil" },
-            { question: "What TV show featured a government experiment known as Project Noah?", answer: "The Passage" },
-            { question: "In 'The X-Files,' what is the name of Mulder's skeptical partner?", answer: "Dana Scully" },
-            { question: "Which series followed two brothers hunting supernatural creatures?", answer: "Supernatural" },
-            { question: "Which cult series features a time-traveling character called 'The Doctor'?", answer: "Doctor Who" },
-            { question: "In 'Breaking Bad,' what is the street name for the blue meth?", answer: "Blue Sky" },
-            { question: "Which cult show featured the character Sawyer, who was a conman on an island?", answer: "Lost" },
-            { question: "What is the name of the AI in 'Battlestar Galactica'?", answer: "Cylons" },
-            { question: "Which show features FBI Agent Dale Cooper investigating the murder of Laura Palmer?", answer: "Twin Peaks" },
-            { question: "In 'Doctor Who,' what is the name of the Doctor's time machine?", answer: "The TARDIS" },
-            { question: "Which cult TV show is set in a post-apocalyptic world ruled by 'walkers'?", answer: "The Walking Dead" },
-            { question: "Which TV series involves a group of criminals who plan and execute a heist?", answer: "Money Heist" },
-            { question: "In 'Buffy the Vampire Slayer,' what is Buffy's main weapon?", answer: "A wooden stake" },
-            { question: "Which cult TV show features a group of survivors of a nuclear apocalypse?", answer: "The 100" },
-            { question: "In 'The X-Files,' who is the Cigarette Smoking Man?", answer: "A mysterious antagonist" },
-            { question: "What is the name of the professor who can create portals to other dimensions in 'Rick and Morty'?", answer: "Rick Sanchez" },
-            { question: "Which show is about clones being hunted by a sinister organization?", answer: "Orphan Black" },
-            { question: "In which TV series does the main character wield a chainsaw and fight evil?", answer: "Ash vs Evil Dead" }
-        ];
+</div>
 
-        document.getElementById('quizImage').addEventListener('click', function() {
-            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
-            const question = questionsAndAnswers[randomIndex].question;
-            const answer = questionsAndAnswers[randomIndex].answer;
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: "What cult TV show featured the character Special Agent Dale Cooper?", answer: "Twin Peaks" },
+        { question: "In which show did David Duchovny and Gillian Anderson play FBI agents?", answer: "The X-Files" },
+        { question: "What is the name of the spaceship in the cult TV series 'Firefly'?", answer: "Serenity" },
+        { question: "Which cult British TV show featured the mysterious Village?", answer: "The Prisoner" },
+        { question: "What is the name of the cult TV show about a high school cheerleader who fights vampires?", answer: "Buffy the Vampire Slayer" },
+        { question: "Which show featured a coffee-obsessed detective in a town filled with secrets?", answer: "Twin Peaks" },
+        { question: "Who played Doctor Who in the 2005 revival of the series?", answer: "Christopher Eccleston" },
+        { question: "What British TV show is known for the phrase 'Don't tell him, Pike!'?", answer: "Dad's Army" },
+        { question: "In which series do FBI agents investigate paranormal activity?", answer: "The X-Files" },
+        { question: "Which cult sci-fi show is set aboard the Battlestar Galactica?", answer: "Battlestar Galactica" },
+        { question: "What cult TV show had the tagline 'The truth is out there'?", answer: "The X-Files" },
+        { question: "Which show featured a group of people stranded on an island after a plane crash?", answer: "Lost" },
+        { question: "What is the setting for the cult TV series 'Farscape'?", answer: "In a distant part of the universe" },
+        { question: "Who played the title character in the TV show 'Dexter'?", answer: "Michael C. Hall" },
+        { question: "What cult TV show was a British sci-fi anthology that explores futuristic dystopias?", answer: "Black Mirror" },
+        { question: "What is the name of the alien Time Lord in 'Doctor Who'?", answer: "The Doctor" },
+        { question: "Which cult show follows a group of survivors of a post-apocalyptic world fighting zombies?", answer: "The Walking Dead" },
+        { question: "What is the fictional town where 'Twin Peaks' is set?", answer: "Twin Peaks, Washington" },
+        { question: "Which show had a character called Spike who was a vampire?", answer: "Buffy the Vampire Slayer" },
+        { question: "In which show do characters travel across the multiverse in a moving house?", answer: "Rick and Morty" },
+        { question: "What British TV show featured time travel, Daleks, and the TARDIS?", answer: "Doctor Who" },
+        { question: "Which show featured a high school chemistry teacher who became a meth kingpin?", answer: "Breaking Bad" },
+        { question: "In 'Stranger Things,' what is the name of the alternate dimension?", answer: "The Upside Down" },
+        { question: "Which TV show starred Bruce Campbell as Ash, fighting against the Evil Dead?", answer: "Ash vs Evil Dead" },
+        { question: "What is the name of the interdimensional being in 'Twin Peaks'?", answer: "BOB" },
+        { question: "In 'Lost,' what is the name of the mysterious group on the island?", answer: "The Others" },
+        { question: "Which show features a police officer named Rick Grimes?", answer: "The Walking Dead" },
+        { question: "What is the name of the spaceship captain in 'Firefly'?", answer: "Malcolm Reynolds" },
+        { question: "In which show does the character Fox Mulder believe in aliens?", answer: "The X-Files" },
+        { question: "Which cult series featured the time-traveling Doctor and his companions?", answer: "Doctor Who" },
+        { question: "Which cult TV series is set in the post-apocalyptic future, where a ragtag fleet searches for Earth?", answer: "Battlestar Galactica" },
+        { question: "Which series featured the characters Walter White and Jesse Pinkman?", answer: "Breaking Bad" },
+        { question: "In 'Buffy the Vampire Slayer,' what is the name of Buffy's best friend who is also a witch?", answer: "Willow Rosenberg" },
+        { question: "Which cult series had a diner owner named Norma Jennings?", answer: "Twin Peaks" },
+        { question: "In 'Stranger Things,' what is the name of the girl with telekinetic powers?", answer: "Eleven" },
+        { question: "What cult sci-fi series is set in the far future aboard a living ship called Moya?", answer: "Farscape" },
+        { question: "Which show follows a blind lawyer who becomes a vigilante at night?", answer: "Daredevil" },
+        { question: "What TV show featured a government experiment known as Project Noah?", answer: "The Passage" },
+        { question: "In 'The X-Files,' what is the name of Mulder's skeptical partner?", answer: "Dana Scully" },
+        { question: "Which series followed two brothers hunting supernatural creatures?", answer: "Supernatural" },
+        { question: "Which cult series features a time-traveling character called 'The Doctor'?", answer: "Doctor Who" },
+        { question: "In 'Breaking Bad,' what is the street name for the blue meth?", answer: "Blue Sky" },
+        { question: "Which cult show featured the character Sawyer, who was a conman on an island?", answer: "Lost" },
+        { question: "What is the name of the AI in 'Battlestar Galactica'?", answer: "Cylons" },
+        { question: "Which show features FBI Agent Dale Cooper investigating the murder of Laura Palmer?", answer: "Twin Peaks" },
+        { question: "In 'Doctor Who,' what is the name of the Doctor's time machine?", answer: "The TARDIS" },
+        { question: "Which cult TV show is set in a post-apocalyptic world ruled by 'walkers'?", answer: "The Walking Dead" },
+        { question: "Which TV series involves a group of criminals who plan and execute a heist?", answer: "Money Heist" },
+        { question: "In 'Buffy the Vampire Slayer,' what is Buffy's main weapon?", answer: "A wooden stake" },
+        { question: "Which cult TV show features a group of survivors of a nuclear apocalypse?", answer: "The 100" },
+        { question: "In 'The X-Files,' who is the Cigarette Smoking Man?", answer: "A mysterious antagonist" },
+        { question: "What is the name of the professor who can create portals to other dimensions in 'Rick and Morty'?", answer: "Rick Sanchez" },
+        { question: "Which show is about clones being hunted by a sinister organization?", answer: "Orphan Black" },
+        { question: "In which TV series does the main character wield a chainsaw and fight evil?", answer: "Ash vs Evil Dead" }
+    ];
 
-            document.getElementById('question').textContent = question;
-            document.getElementById('answer').textContent = answer;
-        });
-    </script>
+    let currentQuestionIndex = 0;
+
+    // Function to shuffle the quiz data
+    function shuffleQuizData() {
+        for (let i = quizData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [quizData[i], quizData[j]] = [quizData[j], quizData[i]];
+        }
+    }
+
+    // Display the next question
+    function nextQuestion() {
+        if (currentQuestionIndex >= quizData.length) {
+            currentQuestionIndex = 0;
+            shuffleQuizData(); // Re-shuffle when all questions are done
+        }
+
+        const questionElement = document.getElementById("question");
+        const answerElement = document.getElementById("answer");
+
+        const currentQuestion = quizData[currentQuestionIndex];
+        questionElement.innerHTML = currentQuestion.question;
+        answerElement.innerHTML = currentQuestion.answer;
+
+        // Animate fade out and fade in
+        questionElement.classList.add("fadeOut");
+        answerElement.classList.add("fadeOut");
+
+        setTimeout(() => {
+            questionElement.classList.remove("fadeOut");
+            questionElement.classList.add("fadeIn");
+            answerElement.classList.remove("fadeOut");
+            answerElement.classList.add("fadeIn");
+        }, 500);
+
+        currentQuestionIndex++;
+    }
+
+    // Initial shuffle and load
+    shuffleQuizData();
+    nextQuestion();
+
+</script>
+
 </body>
 </html>
